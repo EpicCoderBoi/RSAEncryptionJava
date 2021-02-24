@@ -19,6 +19,8 @@ public class EncryptAndDecrypt {
 	
 	private static BigInteger encryptedResult;
 	
+	private static ArrayList<String> digits;
+	
 	private static void ReceiveKeys() {
 		
 		try {
@@ -42,12 +44,16 @@ public class EncryptAndDecrypt {
 
 	
 	private static void EncryptString(String value) {	
+		//Start timer for encryption here
 		String convertedInput = "";
+		
+		digits = new ArrayList<String>();
 		
 		char[] charArray = value.toCharArray();
 		
 		for (int i = 0; i < value.length(); i = i + 1) {
 			convertedInput = convertedInput + letterToString.get(charArray[i]);
+			digits.add(letterToString.get(charArray[i]).toString());
 		}
 		
 		System.out.println("The converted string is " + convertedInput);	
@@ -56,20 +62,24 @@ public class EncryptAndDecrypt {
 		
 		encryptedResult = convertedInputString.modPow(BigInteger.valueOf(e), BigInteger.valueOf(PublicKey));
 		
+		//end timer for encryption here
 		System.out.println("The final encrypted result is " + encryptedResult);
+		
 	}
 	
-	private static void DecryptString(BigInteger encrypted) {	
+	private static void DecryptString(BigInteger encrypted) {		
+		//start timer for decryption here
 		BigInteger decryptedResult = encrypted.modPow(BigInteger.valueOf(PrivateKey), BigInteger.valueOf(PublicKey));
 		
 		String stringResult = String.valueOf(decryptedResult);
-				
+	
 		String finalResult = "";
 		
-		for (int i = 0; i < stringResult.length(); i = i + 1) {
-			finalResult = finalResult + getKeyFromValue(letterToString, Integer.valueOf(stringResult.substring(i, i + 1)));
+		for (int i = 0; i < digits.size(); i = i + 1) {
+			finalResult = finalResult + getKeyFromValue(letterToString, Integer.valueOf(digits.get(i))); 
+			System.out.println(digits.get(i));
 		}
-
+		//end time for decryption here
 		System.out.println("The final decrypted result is " + finalResult);	
 	}
 	
@@ -114,15 +124,12 @@ public class EncryptAndDecrypt {
 	/**
 		Some improvements which need to be made are:
 		1. Add a timer and see how much time it takes to encrypt a string
-		2. Fix the bug which doesn't allow 7+ digit numbers to be encrypted
-		3. Fix the error on line 70, which can only take in 1 number. Use a list to add the numbers and then encrypt from there.
-	
 	**/
 	
 	public static void main(String[] arguments) {
 		InitializeLookupTable();
 		ReceiveKeys();
-		EncryptString("HIHIHI");
+		EncryptString("PEPEGA");
 		DecryptString(encryptedResult);
 	}
 }
